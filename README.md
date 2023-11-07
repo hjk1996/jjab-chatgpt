@@ -1,5 +1,6 @@
 # 짭 GPT
 
+![demo](./demo.png)
 
 ## Features
 
