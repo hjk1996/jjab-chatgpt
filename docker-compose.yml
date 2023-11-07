@@ -27,6 +27,7 @@ services:
     image: nginx:latest
     depends_on:
       - gpt
+      - db
     volumes:
       - ./volumes/default.conf:/etc/nginx/conf.d/default.conf
     ports:

@@ -20,7 +20,7 @@
    ```
    git clone https://github.com/hjk1996/jjab-chatgpt.git
    ```
-2. 클론한 폴더로 이동합니다.
+2. 클론한 폴더로 이동합니다. 폴더 이름은 jjab-chatgpt이여야 합니다.
    ```
    cd /path/to/your/folder
    ```
@@ -29,4 +29,4 @@
    ```
    docker compose up
    ```
-5. 웹브라우저를 통해 [링크](http://localhost:80)로 접속합니다.
+5. 모든 컨테이너가 실행된 이후 웹브라우저를 통해 [링크](http://localhost:80)로 접속합니다.
