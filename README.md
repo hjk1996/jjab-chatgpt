@@ -21,4 +21,4 @@
    ```
    docker compose up
    ```
-4. 웹브라우저를 통해 (http://localhost:80)로 접속합니다.
+4. 웹브라우저를 통해 [해당 링크](http://localhost:80)로 접속합니다.
