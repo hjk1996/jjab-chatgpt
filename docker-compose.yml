@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  db:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./volumes/dbdata:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+  gpt:
+    image: dunhill741/mygpt:1.2
+    restart: always
+    depends_on:
+      - db
+    deploy:
+      replicas: 3
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+  web:
+    image: nginx:latest
+    depends_on:
+      - gpt
+    volumes:
+      - ./volumes/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    
