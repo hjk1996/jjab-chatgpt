@@ -20,6 +20,9 @@
    git clone https://github.com/hjk1996/jjab-chatgpt.git
    ```
 2. 클론한 폴더로 이동합니다.
+   ```
+   cd /path/to/your/folder
+   ```
 3. .env 파일의 OPENAI_API_KEY를 발급받은 API Key로 변경합니다.
 4. 도커를 실행한 후 다음 명령어를 입력합니다.
    ```
