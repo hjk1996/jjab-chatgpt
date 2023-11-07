@@ -11,6 +11,7 @@
 앱을 실행시키기 위한 요구 사항은 다음과 같습니다:
 - [Docker](https://www.docker.com/get-started/)
 - [OpenAI](https://platform.openai.com/api-keys) API Key
+- 리눅스 또는 윈도우 환경
 
 ## Installing
 
