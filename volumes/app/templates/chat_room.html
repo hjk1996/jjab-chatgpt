@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+  .message-list {
+    padding-left: 0; /* 기본 왼쪽 패딩 제거 */
+    list-style-type: none;
+    list-style: none;
+  }
+  .message {
+    clear: both;
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    max-width: 60%;
+  }
+  .message-user {
+    background-color: #dcf8c6;
+    text-align: right;
+    float: right;
+  }
+  .message-others {
+    background-color: #ebebeb;
+    text-align: left;
+    float: left;
+  }
+  #chat {
+    position: fixed;
+    bottom: 50;
+    width: 50%;
+  }
+
+  #messages {
+    max-height: 500px; /* 예시로 400px을 사용, 필요에 따라 조정 */
+    overflow-y: auto;
+  }
+
+</style>
+  <head>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- 생략: 기타 head 태그 내용 -->
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h1 id="title" class="text-center"></h1>
+      <div class="text-right mb-3">
+        <button onclick="goToMainPage()" class="btn btn-info">Go to Main Page</button>
+      </div>
+      <div id="messages" class="mt-3">
+        <ul class="message-list"></ul>
+      </div>
+
+      <div id="chat" class="input-group mt-3">
+        <input
+          type="text"
+          id="message_input"
+          class="form-control"
+          placeholder="Type your message" />
+        <div class="input-group-append">
+          <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (Optional, if you need Bootstrap JS components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Socket.io -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <!-- Custom Script -->
+    <script type="text/javascript">
+      var socket = io.connect(
+        "http://" + document.domain + ":" + location.port
+      );
+      var chat_room = JSON.parse('{{ chat_room | safe }}');
+
+    for (var i = 0; i < chat_room.messages.length; i++) {
+    var message = chat_room.messages[i];
+    var messagesDiv = document.getElementById("messages");
+    var messageDiv = document.createElement("div");
+    if (message.sender_id === "user") {
+        messageDiv.classList.add("message", "message-user");
+    } else {
+        messageDiv.classList.add("message", "message-others");
+    }
+
+    if (message.content !== undefined) {
+    messageDiv.appendChild(document.createTextNode(message.content));
+    messagesDiv.appendChild(messageDiv);
+    } 
+
+    
+}
+      var title = document.getElementById("title");
+      title.innerText = chat_room.name;
+
+
+      socket.on("connect", function () {
+        // Join the chat room
+        socket.emit("join", { room: chat_room._id });
+      });
+
+      function uuidv4() {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+          /[xy]/g,
+          function (c) {
+            var r = (Math.random() * 16) | 0,
+              v = c == "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          }
+        );
+      }
+
+      function goToMainPage() {
+        window.location = '/';
+      }
+
+      function scrollToBottom() {
+        var messagesDiv = document.getElementById("messages");
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+
+      function sendMessage() {
+        var messageInput = document.getElementById("message_input");
+        var content = messageInput.value;
+        messageInput.value = "";
+        socket.emit("message", {
+          room: chat_room._id,
+          content: content,
+          sender_id: "user",
+          timestamp: new Date().toISOString(),
+          message_id: uuidv4(),
+        });
+      }
+
+socket.on("message", function (data) {
+    var messagesDiv = document.getElementById("messages");
+    var sender_id = data.sender_id;
+    var messageDiv = document.createElement("div");
+    if (sender_id === "user") {
+        messageDiv.classList.add("message", "message-user");
+    } else {
+        messageDiv.classList.add("message", "message-others");
+    }
+    
+    if (data.content !== undefined) {
+    messageDiv.appendChild(document.createTextNode(data.content));
+    messagesDiv.appendChild(messageDiv);
+    scrollToBottom();
+    }
+
+    
+});
+    </script>
+  </body>
+</html>

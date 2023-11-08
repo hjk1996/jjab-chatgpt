@@ -22,6 +22,8 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./volumes/app:/app
 
   web:
     image: nginx:latest
