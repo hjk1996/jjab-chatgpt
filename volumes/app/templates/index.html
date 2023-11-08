@@ -1,46 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>짭 GPT</title>
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
-    <div class="container mt-5">
-      <h1 class="text-center">짭 GPT</h1>
 
-      <!-- 채팅방 목록 -->
-      <ul class="list-group mt-4">
-        {% for chat_room in chat_rooms %}
-        <li class="list-group-item">
-          <a href="/chat/{{ chat_room.room_id }}">{{ chat_room.name }}</a> (ID: {{
-          chat_room.room_id }})
-        </li>
-        {% endfor %}
-      </ul>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>짭 GPT</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
 
-      <!-- 새 채팅방 생성 폼 -->
-      <form action="/create_room" method="post" class="mt-4">
-        <div class="form-group">
-          <input type="text" class="form-control" name="room_name" placeholder="채팅방 이름" />
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" name="personality" placeholder="AI 성격" />
-        </div>
-        <button type="submit" class="btn btn-primary">새 채팅방 생성</button>
-      </form>
-    </div>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">짭 GPT</h1>
 
-    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- 채팅방 목록 -->
+    <ul class="list-group mt-4">
+      {% for chat_room in chat_rooms %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <a href="/chat/{{ chat_room.room_id }}">{{ chat_room.name }}</a> (ID: {{ chat_room.room_id }})
+        <!-- Delete form -->
+        <form action="/delete_room" method="POST"
+          onsubmit="return confirm('Are you sure you want to delete this room?');">
+          <input type="hidden" name="room_id" value="{{ chat_room.room_id }}">
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
 
-    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+    <!-- 새 채팅방 생성 폼 -->
+    <form action="/create_room" method="post" class="mt-4">
+      <div class="form-group">
+        <input type="text" class="form-control" name="room_name" placeholder="채팅방 이름" />
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="personality" placeholder="AI 성격" />
+      </div>
+      <button type="submit" class="btn btn-primary">새 채팅방 생성</button>
+    </form>
+  </div>
+
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
 </html>

@@ -10,7 +10,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
   gpt:
-    image: dunhill741/mygpt:1.2
+    image: dunhill741/mygpt:1.3
     restart: always
     depends_on:
       - db
@@ -22,9 +22,10 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      FLASK_APP: /app/app.py
     volumes:
       - ./volumes/app:/app
-
+    command: "python -m flask run --host=0.0.0.0"
   web:
     image: nginx:latest
     depends_on:

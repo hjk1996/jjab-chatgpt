@@ -86,13 +86,30 @@ def handle_message(data):
         },
     )
     chat_room = ChatRoom.from_mongo(db.chat_rooms.find_one({"_id": room}))
-    completion = openai.chat.completions.create(
-        messages=chat_room.messages_to_dict(), model="gpt-3.5-turbo"
-    )
-    ai_content = completion.choices[0].message.content
+    # completion = openai.chat.completions.create(
+    #     messages=chat_room.messages_to_dict(), model="gpt-3.5-turbo"
+    # )
+    # ai_content = completion.choices[0].message.content
+    ai_content = ""
     ai_id = "assistant"
     ai_message_id = str(uuid4())
     ai_timestamp = datetime.now().timestamp()
+    for chunk in openai.chat.completions.create(
+                                messages=chat_room.messages_to_dict(),
+                                model="gpt-3.5-turbo",
+                                stream=True):
+        chunk_content = chunk.choices[0].delta.content
+        if chunk_content is not None:
+            ai_content += chunk.choices[0].delta.content
+            emit(
+                "message",
+                {
+                    "content": chunk_content,
+                    "sender_id": ai_id,
+                    "timestamp": ai_timestamp,
+                    "message_id": ai_message_id,
+                },
+            )
     db.chat_rooms.update_one(
         {"_id": room},
         {
@@ -106,15 +123,15 @@ def handle_message(data):
             }
         },
     )
-    emit(
-        "message",
-        {
-            "content": ai_content,
-            "sender_id": ai_id,
-            "timestamp": ai_timestamp,
-            "message_id": ai_message_id,
-        },
-    )
+    # emit(
+    #     "message",
+    #     {
+    #         "content": ai_content,
+    #         "sender_id": ai_id,
+    #         "timestamp": ai_timestamp,
+    #         "message_id": ai_message_id,
+    #     },
+    # )
 
 
 @app.route("/create_room", methods=["POST"])
@@ -131,6 +148,14 @@ def create_room():
         )
     return redirect("/")
 
+@app.route("/delete_room", methods=["POST"])
+def delete_room():
+    room_id = request.form.get("room_id")
+    if room_id:
+        db.chat_rooms.delete_one({
+            "_id": room_id
+        })
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
