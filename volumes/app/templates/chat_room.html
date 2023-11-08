@@ -99,6 +99,16 @@
     var title = document.getElementById("title");
     title.innerText = chat_room.name;
 
+    document.getElementById('message_input').addEventListener('keypress', function(event) {
+    var message = this.value.trim(); // 입력란의 값에서 앞뒤 공백을 제거
+    if (event.key === 'Enter' && message.length > 0) {
+      // Enter 키가 눌렸고, 입력란에 텍스트가 있는 경우
+      event.preventDefault(); // 기본 이벤트를 방지
+      sendMessage(); // sendMessage 함수 호출
+      this.value = ''; // 입력란을 비움 (선택 사항)
+    }
+  });
+
 
     socket.on("connect", function () {
       // Join the chat room

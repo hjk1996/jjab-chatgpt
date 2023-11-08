@@ -86,10 +86,6 @@ def handle_message(data):
         },
     )
     chat_room = ChatRoom.from_mongo(db.chat_rooms.find_one({"_id": room}))
-    # completion = openai.chat.completions.create(
-    #     messages=chat_room.messages_to_dict(), model="gpt-3.5-turbo"
-    # )
-    # ai_content = completion.choices[0].message.content
     ai_content = ""
     ai_id = "assistant"
     ai_message_id = str(uuid4())
@@ -123,15 +119,7 @@ def handle_message(data):
             }
         },
     )
-    # emit(
-    #     "message",
-    #     {
-    #         "content": ai_content,
-    #         "sender_id": ai_id,
-    #         "timestamp": ai_timestamp,
-    #         "message_id": ai_message_id,
-    #     },
-    # )
+
 
 
 @app.route("/create_room", methods=["POST"])
